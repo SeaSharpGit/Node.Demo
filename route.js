@@ -21,7 +21,7 @@ module.exports={
             response.end('');
         });
     },
-    readFile:function(request,response){
+    showImage:function(request,response){
         response.writeHead(200, {'Content-Type':'image/png'});
         service.readFileAsync('./images/study.png',function(file){
             response.write(file,'binary');
