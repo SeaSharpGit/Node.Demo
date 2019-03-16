@@ -25,4 +25,14 @@ module.exports={
             }
         });
     },
+    readFileAsync:function(path,callback){
+        fs.readFile(path,'binary',function(err,file){
+            if(err){
+                console.log(err);
+            }else{
+                callback(file);
+            }
+        });
+    }
+
 }
