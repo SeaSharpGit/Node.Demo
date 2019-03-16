@@ -5,9 +5,9 @@ module.exports={
         return data;
     },
     readFileAsync:function(path,callback){
-        fs.readFile(path,function(err,data){
-            if(err){
-                console.log(err);
+        fs.readFile(path,function(error,data){
+            if(error){
+                console.log(error);
             }else{
                 callback(data);
             }
@@ -17,18 +17,18 @@ module.exports={
         fs.writeFileSync(path,data);
     },
     writeFileAsync:function(path,data,callback){
-        fs.writeFile(path,data,function(err){
-            if(err){
-                console.log(err);
+        fs.writeFile(path,data,function(error){
+            if(error){
+                console.log(error);
             }else{
                 callback();
             }
         });
     },
     readFileAsync:function(path,callback){
-        fs.readFile(path,'binary',function(err,file){
-            if(err){
-                console.log(err);
+        fs.readFile(path,'binary',function(error,file){
+            if(error){
+                console.log(error);
             }else{
                 callback(file);
             }

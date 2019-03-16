@@ -2,10 +2,25 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
     </head>
-
     <body>
-        登陆
-        <img src="./showImage"/>
+        <form action="./login" method="GET">
+            <table>
+                <tr>
+                    <td>UserName</td>
+                    <td><input type="text" name="username" /></td>
+                </tr>
+                <tr>
+                    <td>Password</td>
+                    <td><input type="text" name="password" /></td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="submit" value="Submit"/>
+                    </td>
+                </tr>
+            </table>
+        </form>
     </body>
+    <img src="./showImage"/>
 
 </html>

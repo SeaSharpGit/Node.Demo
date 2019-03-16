@@ -14,7 +14,14 @@ http.createServer(function(request,response){
 		tea.teach();
 
 		var pathname=url.parse(request.url).pathname.replace(/\//,'');
-		route[pathname](request,response);
+		try{
+			route[pathname](request,response);
+		}catch(error){
+			response.writeHead(200, {'Content-Type':'text/html;charset=utf-8'});
+			response.write(error.toString());
+            response.end('');
+		}
+		
 		
 	}
 }).listen(8888);

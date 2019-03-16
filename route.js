@@ -1,6 +1,18 @@
 var service=require('./service/service');
+var url=require('url');
 module.exports={
     login:function(request,response){
+        var query=url.parse(request.url,true).query;
+        //GET
+        var username=query['username'];
+        var password=query['password'];
+        if(username!=undefined){
+            console.log(username);
+        }
+        if(password!=undefined){
+            console.log(password);
+        }
+
         response.writeHead(200, {'Content-Type':'text/html;charset=utf-8'});
         service.readFileAsync('./views/login.html',function(data){
             response.write(data);
