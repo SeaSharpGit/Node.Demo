@@ -1,9 +1,9 @@
 var service=require('./service/service');
 var url=require('url');
+var querystring=require('querystring');
 module.exports={
-    login:function(request,response){
+    loginGet:function(request,response){
         var query=url.parse(request.url,true).query;
-        //GET
         var username=query['username'];
         var password=query['password'];
         if(username!=undefined){
@@ -12,12 +12,27 @@ module.exports={
         if(password!=undefined){
             console.log(password);
         }
-
         response.writeHead(200, {'Content-Type':'text/html;charset=utf-8'});
         service.readFileAsync('./views/login.html',function(data){
             response.write(data);
             response.end('');
         });
+    },
+    loginPost:function(request,response){
+        var msg='';
+        request.on('data',function(data){
+            msg+=data;
+        });
+        request.on('end',function(){
+            msg=querystring.parse(msg);
+            response.writeHead(200, {'Content-Type':'text/html;charset=utf-8'});
+            response.write('UserName='+msg["username"]+'\n');
+            response.write('Password='+msg["password"]);
+            response.end('');
+        });
+        var a='';
+        
+        
     },
     logout:function(request,response){
         response.writeHead(200, {'Content-Type':'text/html;charset=utf-8'});
