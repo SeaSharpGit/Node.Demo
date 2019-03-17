@@ -2,7 +2,6 @@ var http=require('http');
 var url=require('url');
 var route=require('./route')
 
-var service=require('./service/service.js');
 var user=require('./models/person');
 var teacher=require('./models/teacher');
 

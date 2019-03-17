@@ -1,6 +1,8 @@
 var service=require('./service/service');
 var url=require('url');
 var querystring=require('querystring');
+var async=require('async');
+
 module.exports={
     loginGet:function(request,response){
         var query=url.parse(request.url,true).query;
@@ -31,8 +33,6 @@ module.exports={
             response.end('');
         });
         var a='';
-        
-        
     },
     logout:function(request,response){
         response.writeHead(200, {'Content-Type':'text/html;charset=utf-8'});
@@ -54,6 +54,56 @@ module.exports={
             response.write(file,'binary');
             response.end('');
         });
+    },
+    async:function(request,response){
+        response.writeHead(200, {'Content-Type':'text/html;charset=utf-8'});
+        //串行
+        async.series({
+            one:function(done){
+                done(null,'one完毕');
+            },
+            two:function(done){
+                done(null,'two完毕');
+            }
+        },function(err,rs){
+            if(err){
+                console.log('错误：'+err);
+            }else{
+                console.log(rs);
+            }
+        });
+        //串行等待
+        async.waterfall([
+            function(done){
+                done(null,'one完毕')
+            }
+            ,function(preValue,done){
+                console.log(preValue);
+                done(null,'two完毕');
+            }
+        ],function(err,rs){
+            if(err){
+                console.log('错误：'+err);
+            }else{
+                console.log(rs);
+            }
+        });
+        //并行
+        async.parallel({
+            one:function(done){
+                done(null,'one完毕');
+            },
+            two:function(done){
+                done(null,'two完毕');
+            }
+        },function(err,rs){
+            if(err){
+                console.log('错误：'+err);
+            }else{
+                console.log(rs);
+            }
+        });
+        response.end('');
     }
 
 
