@@ -104,6 +104,12 @@ module.exports={
             }
         });
         response.end('');
+    },
+    mysql:function(request,response){
+        service.mySqlOpen();
+        service.mySqlRun();
+        service.mySqlClose();
+        response.end('');
     }
 
 
