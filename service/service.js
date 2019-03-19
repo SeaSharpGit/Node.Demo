@@ -1,6 +1,9 @@
 var fs=require('fs');
-var mysqlPools=require('../models/mysqlPool');
-var pool=new mysqlPools().getPool();
+var mysqlService=require('../models/mysqlService');
+var mysqlModel=new mysqlService();
+var mysqlPool=require('../models/mysqlPool');
+var mysqlPoolModel=new mysqlPool();
+var pool=mysqlPoolModel.getPool();
 
 module.exports={
     readFileSync:function(path){
@@ -56,17 +59,9 @@ module.exports={
         })
     },
     mysqlRun:function(){
-        var sql='select * from User';
-        connection.query(sql,null,function(error,rs){
-            if(error){
-                console.log(error);
-            }else{
-                for (let index = 0; index < rs.length; index++) {
-                    const element = rs[index];
-                    console.log(element.UserID+'_'+element.UserName+'_'+element.Date);
-                }
-            }
-        })
+        mysqlModel.mysqlOpen();
+        mysqlModel.mysqlRun();
+        mysqlModel.mysqlClose();
     },
     mysqlPoolRun:function(){
         var sql='select * from User';

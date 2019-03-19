@@ -1,14 +1,15 @@
 var mysql=require('mysql');
-var connection=mysql.createConnection({
-    host:'localhost',
-    user:'root',
-    password:'sa123456',
-    database:'Test',
-    port:'3306'
-});
 
-module.exports={
-    mysqlOpen:function(){
+function mysqlService(){
+    var connection=mysql.createConnection({
+        host:'localhost',
+        user:'root',
+        password:'sa123456',
+        database:'Test',
+        port:'3306'
+    });
+
+    this.mysqlOpen=function(){
         connection.connect(function(error){
             if(error){
                 console.log(error);
@@ -16,8 +17,8 @@ module.exports={
                 console.log('MySql连接成功');
             }
         });
-    },
-    mysqlClose:function(){
+    };
+    this.mysqlClose=function(){
         connection.end(function(error){
             if(error){
                 console.log(error);
@@ -25,8 +26,8 @@ module.exports={
                 console.log('MySql断开成功');
             }
         })
-    },
-    mysqlRun:function(){
+    };
+    this.mysqlRun=function(){
         var sql='select * from User';
         connection.query(sql,null,function(error,rs){
             if(error){
@@ -38,5 +39,7 @@ module.exports={
                 }
             }
         })
-    }
-}
+    };
+};
+
+module.exports=mysqlService;

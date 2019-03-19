@@ -2,8 +2,6 @@ var service=require('./service/service');
 var url=require('url');
 var querystring=require('querystring');
 var async=require('async');
-var mysql=require('./service/mysql');
-var mysqlPool=require('./models/mysqlPool');
 var teacher=require('./models/teacher');
 
 module.exports={
@@ -115,9 +113,7 @@ module.exports={
         response.end('');
     },
     mysql:function(request,response){
-        mysql.mySqlOpen();
-        mysql.mySqlRun();
-        mysql.mySqlClose();
+        service.mysqlRun();
         response.end('');
     },
     mysqlPool:function(request,response){
