@@ -2,8 +2,17 @@ var service=require('./service/service');
 var url=require('url');
 var querystring=require('querystring');
 var async=require('async');
+var mysql=require('./service/mysql');
+var mysqlPool=require('./models/mysqlPool');
+var teacher=require('./models/teacher');
 
 module.exports={
+    objectTest:function(){
+        tea=new teacher(2,'王海的老师',50);
+		tea.say();
+		tea.teach();
+        response.end('');
+    },
     loginGet:function(request,response){
         var query=url.parse(request.url,true).query;
         var username=query['username'];
@@ -106,9 +115,13 @@ module.exports={
         response.end('');
     },
     mysql:function(request,response){
-        service.mySqlOpen();
-        service.mySqlRun();
-        service.mySqlClose();
+        mysql.mySqlOpen();
+        mysql.mySqlRun();
+        mysql.mySqlClose();
+        response.end('');
+    },
+    mysqlPool:function(request,response){
+        service.mysqlPoolRun();
         response.end('');
     }
 

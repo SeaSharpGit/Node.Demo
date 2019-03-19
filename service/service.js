@@ -1,12 +1,6 @@
 var fs=require('fs');
-var mysql=require('mysql');
-var connection=mysql.createConnection({
-    host:'localhost',
-    user:'root',
-    password:'sa123456',
-    database:'Test',
-    port:'3306'
-});
+var mysqlPools=require('../models/mysqlPool');
+var pool=new mysqlPools().getPool();
 
 module.exports={
     readFileSync:function(path){
@@ -43,7 +37,7 @@ module.exports={
             }
         });
     },
-    mySqlOpen:function(){
+    mysqlOpen:function(){
         connection.connect(function(error){
             if(error){
                 console.log(error);
@@ -52,7 +46,7 @@ module.exports={
             }
         });
     },
-    mySqlClose:function(){
+    mysqlClose:function(){
         connection.end(function(error){
             if(error){
                 console.log(error);
@@ -61,7 +55,7 @@ module.exports={
             }
         })
     },
-    mySqlRun:function(){
+    mysqlRun:function(){
         var sql='select * from User';
         connection.query(sql,null,function(error,rs){
             if(error){
@@ -73,7 +67,22 @@ module.exports={
                 }
             }
         })
-
+    },
+    mysqlPoolRun:function(){
+        var sql='select * from User';
+        pool.getConnection(function(error,connect){
+            connect.query(sql,null,function(error,rs){
+                if(error){
+                    console.log(error);
+                }else{
+                    for (let index = 0; index < rs.length; index++) {
+                        const element = rs[index];
+                        console.log(element.UserID+'_'+element.UserName+'_'+element.Date);
+                    }
+                }
+                connect.release();
+            });
+        });
     }
 
 }
