@@ -119,6 +119,10 @@ module.exports={
     mysqlPool:function(request,response){
         service.mysqlPoolRun();
         response.end('');
+    },
+    event:function(request,response){
+        service.event();
+        response.end('');
     }
 
 

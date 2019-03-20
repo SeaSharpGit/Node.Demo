@@ -4,6 +4,7 @@ var mysqlModel=new mysqlService();
 var mysqlPool=require('../models/mysqlPool');
 var mysqlPoolModel=new mysqlPool();
 var pool=mysqlPoolModel.getPool();
+var events=require('events');
 
 module.exports={
     readFileSync:function(path){
@@ -78,6 +79,14 @@ module.exports={
                 connect.release();
             });
         });
+    },
+    event:function(){
+        var eventEmitter=new events.EventEmitter();
+        eventEmitter.once('showName',function(name1,name2){
+            console.log(name1+name2);
+        });
+        eventEmitter.emit('showName','王','海');
+
     }
 
 }
