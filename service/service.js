@@ -82,9 +82,9 @@ module.exports={
     },
     event:function(){
         var eventEmitter=new events.EventEmitter();
-        eventEmitter.once('showName',function(name1,name2){
-            console.log(name1+name2);
-        });
+        eventEmitter.once('showName',(name1,name2)=>
+            console.log(name1+name2)
+        );
         eventEmitter.emit('showName','王','海');
 
     }
