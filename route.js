@@ -1,4 +1,5 @@
-const service=require('./service/service');
+const service=require('./common/service');
+const fs=require('fs');
 const url=require('url');
 const querystring=require('querystring');
 const async=require('async');
@@ -13,8 +14,9 @@ module.exports={
     },
     loginGet:function(request,response){
         var query=url.parse(request.url,true).query;
-        var username=query['username'];
-        var password=query['password'];
+        var username=query.username;
+        var password=query.password;
+
         if(username!=undefined){
             console.log(username);
         }
@@ -39,17 +41,14 @@ module.exports={
             response.write('Password='+msg["password"]);
             response.end('');
         });
-        var a='';
-    },
-    logout:function(request,response){
-        response.writeHead(200, {'Content-Type':'text/html;charset=utf-8'});
-        service.readFileAsync('./views/logout.html',function(data){
-            response.write(data);
-            response.end('');
-        });
     },
     wirteFile:function(request,response){
         response.writeHead(200, {'Content-Type':'text/html;charset=utf-8'});
+        //绝对路径
+        var path=path.resolve('./','views','login.html');
+        //相对路径
+        var path2=path.join('./','views','login.html');
+        
         service.writeFileAsync('./test.txt','写文件',function(){
             response.write('写文件成功');
             response.end('');
@@ -123,7 +122,99 @@ module.exports={
     event:function(request,response){
         service.event();
         response.end('');
-    }
+    },
+
+
+    //向文件追加文本
+    appendFile:(request,response)=>{
+        //没有文件会创建文件
+        fs.appendFileSync('./test.txt','同步追加',{encoding:'utf-8'});
+        fs.appendFile('./test.txt','异步追加',{encoding:'utf-8'},error=>{
+            if(error){
+                console.log('appendFile失败'+error.toString());
+            }else{
+                console.log('appendFile成功');
+            }
+            response.end('');
+        });
+    },
+    //读取文件
+    readFile:(request,response)=>{
+        fs.readFileSync('./test.txt','utf-8');
+        fs.readFileSync('./images/study.png','binary');
+        fs.readFile('./test.text',function(error,data){
+            if(error){
+                console.log('readFile失败'+error.toString());
+            }else{
+                console.log('readFile成功');
+            }
+            response.end('');
+        });
+    },
+    //写文件
+    writeFile:(request,response)=>{
+        //没有文件会创建文件，有文件会覆盖
+        fs.writeFileSync('./test.txt','同步写文件',{encoding:'utf-8'});
+        fs.writeFile('./test.txt','异步写文件',{encoding:'utf-8'},function(error){
+            if(error){
+                console.log('writeFile失败'+error.toString());
+            }else{
+                console.log('writeFile成功');
+            }
+            response.end('');
+        });
+    },
+    //打开文件
+    openFile:(request,response)=>{
+        var fd=fs.openSync('./test.txt','r');
+        fs.open('./test.txt','r',(error,fd)=>{
+            if(error){
+                console.log('openFile失败'+error.toString());
+            }else{
+                console.log('openFile成功');
+            }
+            response.end('');
+        });
+    },
+    //新建文件夹
+    mkdir:(request,response)=>{
+        //如果文件夹已存在会报错
+        fs.mkdirSync('./newFolder');
+        fs.mkdir('./newFolder',error=>{
+            if(error){
+                console.log('mkdir失败'+error.toString());
+            }else{
+                console.log('mkdir成功');
+            }
+            response.end('');
+        });
+    },
+    //读取文件夹
+    readdir:(request,response)=>{
+        fs.readdirSync('./');
+        fs.readdir('./',(error,files)=>{
+            if(error){
+                console.log('readdir失败'+error.toString());
+            }else{
+                console.log('readdir成功');
+            }
+            response.end('');
+        });
+    },
+    //删除文件夹
+    rmdir:(request,response)=>{
+        //如果文件夹中有内容会报错
+        fs.rmdirSync('./newFolder');
+        fs.rmdir('./newFolder',error=>{
+            if(error){
+                console.log('rmdir失败'+error.toString());
+            }else{
+                console.log('rmdir成功');
+            }
+            response.end('');
+        });
+
+    },
 
 
 }
