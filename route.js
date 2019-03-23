@@ -1,8 +1,8 @@
-var service=require('./service/service');
-var url=require('url');
-var querystring=require('querystring');
-var async=require('async');
-var teacher=require('./models/teacher');
+const service=require('./service/service');
+const url=require('url');
+const querystring=require('querystring');
+const async=require('async');
+const teacher=require('./models/teacher');
 
 module.exports={
     objectTest:function(){

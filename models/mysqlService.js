@@ -1,4 +1,4 @@
-var mysql=require('mysql');
+const mysql=require('mysql');
 
 function mysqlService(){
     var connection=mysql.createConnection({

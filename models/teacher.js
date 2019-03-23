@@ -1,4 +1,4 @@
-var user=require('./person');
+const user=require('./person');
 function teacher(id,name,age){
     user.apply(this,[id,name,age]);
     this.teach=function(){

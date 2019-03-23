@@ -1,6 +1,6 @@
-var http=require('http');
-var url=require('url');
-var route=require('./route')
+const http=require('http');
+const url=require('url');
+const route=require('./route')
 
 http.createServer(function(request,response){
 	//防止执行2次

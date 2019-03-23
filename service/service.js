@@ -1,10 +1,10 @@
-var fs=require('fs');
-var mysqlService=require('../models/mysqlService');
-var mysqlModel=new mysqlService();
-var mysqlPool=require('../models/mysqlPool');
-var mysqlPoolModel=new mysqlPool();
-var pool=mysqlPoolModel.getPool();
-var events=require('events');
+const fs=require('fs');
+const mysqlService=require('../models/mysqlService');
+const mysqlModel=new mysqlService();
+const mysqlPool=require('../models/mysqlPool');
+const mysqlPoolModel=new mysqlPool();
+const pool=mysqlPoolModel.getPool();
+const events=require('events');
 
 module.exports={
     readFileSync:function(path){
