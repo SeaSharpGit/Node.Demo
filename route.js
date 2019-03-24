@@ -6,11 +6,11 @@ const async=require('async');
 const teacher=require('./models/teacher');
 
 module.exports={
-    objectTest:function(){
+    objectTest:function(request,response){
         tea=new teacher(2,'王海的老师',50);
 		tea.say();
 		tea.teach();
-        response.end('');
+        response.end();
     },
     loginGet:function(request,response){
         var query=url.parse(request.url,true).query;
@@ -26,7 +26,7 @@ module.exports={
         response.writeHead(200, {'Content-Type':'text/html;charset=utf-8'});
         service.readFileAsync('./views/login.html',function(data){
             response.write(data);
-            response.end('');
+            response.end();
         });
     },
     loginPost:function(request,response){
@@ -39,7 +39,7 @@ module.exports={
             response.writeHead(200, {'Content-Type':'text/html;charset=utf-8'});
             response.write('UserName='+msg["username"]+'\n');
             response.write('Password='+msg["password"]);
-            response.end('');
+            response.end();
         });
     },
     wirteFile:function(request,response){
@@ -51,14 +51,14 @@ module.exports={
         
         service.writeFileAsync('./test.txt','写文件',function(){
             response.write('写文件成功');
-            response.end('');
+            response.end();
         });
     },
     showImage:function(request,response){
         response.writeHead(200, {'Content-Type':'image/png'});
         service.readFileAsync('./images/study.png',function(file){
             response.write(file,'binary');
-            response.end('');
+            response.end();
         });
     },
     async:function(request,response){
@@ -109,19 +109,19 @@ module.exports={
                 console.log(rs);
             }
         });
-        response.end('');
+        response.end();
     },
     mysql:function(request,response){
         service.mysqlRun();
-        response.end('');
+        response.end();
     },
     mysqlPool:function(request,response){
         service.mysqlPoolRun();
-        response.end('');
+        response.end();
     },
     event:function(request,response){
         service.event();
-        response.end('');
+        response.end();
     },
 
 
@@ -135,33 +135,33 @@ module.exports={
             }else{
                 console.log('appendFile成功');
             }
-            response.end('');
+            response.end();
         });
     },
     //读取文件
     readFile:(request,response)=>{
         fs.readFileSync('./test.txt','utf-8');
         fs.readFileSync('./images/study.png','binary');
-        fs.readFile('./test.text',function(error,data){
+        fs.readFile('./test.text',(error,data)=>{
             if(error){
                 console.log('readFile失败'+error.toString());
             }else{
                 console.log('readFile成功');
             }
-            response.end('');
+            response.end();
         });
     },
     //写文件
     writeFile:(request,response)=>{
         //没有文件会创建文件，有文件会覆盖
         fs.writeFileSync('./test.txt','同步写文件',{encoding:'utf-8'});
-        fs.writeFile('./test.txt','异步写文件',{encoding:'utf-8'},function(error){
+        fs.writeFile('./test.txt','异步写文件',{encoding:'utf-8'},error=>{
             if(error){
                 console.log('writeFile失败'+error.toString());
             }else{
                 console.log('writeFile成功');
             }
-            response.end('');
+            response.end();
         });
     },
     //打开文件
@@ -173,7 +173,7 @@ module.exports={
             }else{
                 console.log('openFile成功');
             }
-            response.end('');
+            response.end();
         });
     },
     //新建文件夹
@@ -186,7 +186,7 @@ module.exports={
             }else{
                 console.log('mkdir成功');
             }
-            response.end('');
+            response.end();
         });
     },
     //读取文件夹
@@ -198,7 +198,7 @@ module.exports={
             }else{
                 console.log('readdir成功');
             }
-            response.end('');
+            response.end();
         });
     },
     //删除文件夹
@@ -211,10 +211,44 @@ module.exports={
             }else{
                 console.log('rmdir成功');
             }
-            response.end('');
+            response.end();
         });
-
     },
+    //删除文件
+    unlinkFile:(request,response)=>{
+        fs.unlinkSync('./test.txt');
+        fs.unlink('./test.txt',error=>{
+            if(error){
+                console.log('unlink失败'+error.toString());
+            }else{
+                console.log('unlink成功');
+            }
+            response.end();
+        });
+    },
+    //文件重命名
+    renameFile:(request,response)=>{
+        fs.renameSync('./test.txt','./test2.txt');
+        fs.rename('./test.txt','./test2.txt',error=>{
+            if(error){
+                console.log('rename失败'+error.toString());
+            }else{
+                console.log('rename成功');
+            }
+            response.end();
+        })
+    },
+    //文件监听
+    watchFile:(request,response)=>{
+        //检测文件的每一个变化
+        fs.watch('./test.txt',(event,fileName)=>{
+            console.log(event,fileName);
+        });
+        //检测文件名的变化
+        fs.watchFile('./test.txt',(current,prev)=>{
+            console.log(current,prev);
+        });
+    }
 
 
 }
