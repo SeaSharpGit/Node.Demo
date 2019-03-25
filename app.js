@@ -1,6 +1,6 @@
 const http=require('http');
 const url=require('url');
-const route=require('./route')
+const route=require('./route');
 
 var app=http.createServer((request,response)=>{
 	//防止执行2次

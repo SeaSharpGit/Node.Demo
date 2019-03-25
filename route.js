@@ -6,7 +6,7 @@ const async=require('async');
 const teacher=require('./models/teacher');
 
 module.exports={
-    objectTest:function(request,response){
+    objectTest:(request,response)=>{
         tea=new teacher(2,'王海的老师',50);
 		tea.say();
 		tea.teach();
