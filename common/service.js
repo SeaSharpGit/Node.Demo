@@ -32,15 +32,6 @@ module.exports={
             }
         });
     },
-    readFileAsync:function(path,callback){
-        fs.readFile(path,'binary',function(error,file){
-            if(error){
-                console.log(error);
-            }else{
-                callback(file);
-            }
-        });
-    },
     mysqlOpen:function(){
         connection.connect(function(error){
             if(error){

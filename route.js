@@ -12,33 +12,34 @@ module.exports={
 		tea.teach();
         response.end();
     },
-    loginGet:function(request,response){
-        var query=url.parse(request.url,true).query;
-        var username=query.username;
-        var password=query.password;
-
-        if(username!=undefined){
-            console.log(username);
-        }
-        if(password!=undefined){
-            console.log(password);
-        }
+    login:function(request,response){
         response.writeHead(200, {'Content-Type':'text/html;charset=utf-8'});
-        service.readFileAsync('./views/login.html',function(data){
-            response.write(data);
+        fs.readFile('./views/login.html','binary',(error,file)=>{
+            if(error){
+                console.log(error);
+            }else{
+                response.write(file,'binary');
+            }
             response.end();
         });
     },
-    loginPost:function(request,response){
+    loginGet:(request,response)=>{
+        response.writeHead(200, {'Content-Type':'text/html;charset=utf-8'});
+        var query=url.parse(request.url,true).query;
+        response.write('账号：'+query.username+'\n\r','utf-8');
+        response.write('密码：'+query.password,'utf-8');
+        response.end();
+    },
+    loginPost:(request,response)=>{
         var msg='';
-        request.on('data',function(data){
+        request.on('data',data=>{
             msg+=data;
         });
-        request.on('end',function(){
+        request.on('end',()=>{
             msg=querystring.parse(msg);
-            response.writeHead(200, {'Content-Type':'text/html;charset=utf-8'});
-            response.write('UserName='+msg["username"]+'\n');
-            response.write('Password='+msg["password"]);
+            response.writeHead(200, {'Content-Type':'text/text;charset=utf-8'});
+            response.write('账号：'+msg.username+'\n\r','utf-8');
+            response.write('密码：'+msg.password,'utf-8');
             response.end();
         });
     },
