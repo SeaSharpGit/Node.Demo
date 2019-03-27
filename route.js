@@ -12,7 +12,7 @@ module.exports={
 		tea.teach();
         response.end();
     },
-    login:function(request,response){
+    login:(request,response)=>{
         response.writeHead(200, {'Content-Type':'text/html;charset=utf-8'});
         fs.readFile('./views/login.html','binary',(error,file)=>{
             if(error){
@@ -34,8 +34,7 @@ module.exports={
         var msg='';
         request.on('data',data=>{
             msg+=data;
-        });
-        request.on('end',()=>{
+        }).on('end',()=>{
             msg=querystring.parse(msg);
             response.writeHead(200, {'Content-Type':'text/text;charset=utf-8'});
             response.write('账号：'+msg.username+'\n\r','utf-8');
@@ -43,89 +42,26 @@ module.exports={
             response.end();
         });
     },
-    wirteFile:function(request,response){
+    wirteFile:(request,response)=>{
         response.writeHead(200, {'Content-Type':'text/html;charset=utf-8'});
-        //绝对路径
-        var path=path.resolve('./','views','login.html');
-        //相对路径
-        var path2=path.join('./','views','login.html');
         
-        service.writeFileAsync('./test.txt','写文件',function(){
+        //绝对路径
+        //var path=path.resolve('./','views','login.html');
+        //相对路径
+        //var path2=path.join('./','views','login.html');
+        
+        service.writeFileAsync('./test.txt','写文件',()=>{
             response.write('写文件成功');
             response.end();
         });
     },
-    showImage:function(request,response){
+    showImage:(request,response)=>{
         response.writeHead(200, {'Content-Type':'image/png'});
-        service.readFileAsync('./images/study.png',function(file){
+        service.readFileAsync('./images/study.png',file=>{
             response.write(file,'binary');
             response.end();
         });
     },
-    async:function(request,response){
-        response.writeHead(200, {'Content-Type':'text/html;charset=utf-8'});
-        //串行
-        async.series({
-            one:function(done){
-                done(null,'one完毕');
-            },
-            two:function(done){
-                done(null,'two完毕');
-            }
-        },function(err,rs){
-            if(err){
-                console.log('错误：'+err);
-            }else{
-                console.log(rs);
-            }
-        });
-        //串行等待
-        async.waterfall([
-            function(done){
-                done(null,'one完毕')
-            }
-            ,function(preValue,done){
-                console.log(preValue);
-                done(null,'two完毕');
-            }
-        ],function(err,rs){
-            if(err){
-                console.log('错误：'+err);
-            }else{
-                console.log(rs);
-            }
-        });
-        //并行
-        async.parallel({
-            one:function(done){
-                done(null,'one完毕');
-            },
-            two:function(done){
-                done(null,'two完毕');
-            }
-        },function(err,rs){
-            if(err){
-                console.log('错误：'+err);
-            }else{
-                console.log(rs);
-            }
-        });
-        response.end();
-    },
-    mysql:function(request,response){
-        service.mysqlRun();
-        response.end();
-    },
-    mysqlPool:function(request,response){
-        service.mysqlPoolRun();
-        response.end();
-    },
-    event:function(request,response){
-        service.event();
-        response.end();
-    },
-
-
     //向文件追加文本
     appendFile:(request,response)=>{
         //没有文件会创建文件
@@ -249,7 +185,74 @@ module.exports={
         fs.watchFile('./test.txt',(current,prev)=>{
             console.log(current,prev);
         });
-    }
+    },
+    //串行 串行等待 并行
+    async:(request,response)=>{
+        response.writeHead(200, {'Content-Type':'text/html;charset=utf-8'});
+        //串行
+        async.series({
+            one:done=>{
+                done(null,'one完毕');
+            },
+            two:done=>{
+                done(null,'two完毕');
+            }
+        },(error,rs)=>{
+            if(error){
+                console.log('错误：'+error);
+            }else{
+                console.log(rs);
+            }
+        });
+        //串行等待
+        async.waterfall([
+            done=>{
+                done(null,'one完毕')
+            },
+            (preValue,done)=>{
+                console.log(preValue);
+                done(null,'two完毕');
+            }
+        ],(error,rs)=>{
+            if(error){
+                console.log('错误：'+error);
+            }else{
+                console.log(rs);
+            }
+        });
+        //并行
+        async.parallel({
+            one:done=>{
+                done(null,'one完毕');
+            },
+            two:done=>{
+                done(null,'two完毕');
+            }
+        },(error,rs)=>{
+            if(error){
+                console.log('错误：'+error);
+            }else{
+                console.log(rs);
+            }
+        });
+        response.end();
+    },
+
+
+    mysql:function(request,response){
+        service.mysqlRun();
+        response.end();
+    },
+    mysqlPool:function(request,response){
+        service.mysqlPoolRun();
+        response.end();
+    },
+    event:function(request,response){
+        service.event();
+        response.end();
+    },
+
+
 
 
 }
