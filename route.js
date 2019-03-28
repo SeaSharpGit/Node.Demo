@@ -50,15 +50,23 @@ module.exports={
         //相对路径
         //var path2=path.join('./','views','login.html');
         
-        service.writeFileAsync('./test.txt','写文件',()=>{
-            response.write('写文件成功');
+        fs.writeFile('./test.txt','写文件',error=>{
+            if(error){
+                console.log(error);
+            }else{
+                response.write('写文件成功');
+            }
             response.end();
         });
     },
     showImage:(request,response)=>{
         response.writeHead(200, {'Content-Type':'image/png'});
-        service.readFileAsync('./images/study.png',file=>{
-            response.write(file,'binary');
+        fs.readFile('./public/images/school.png',(error,data)=>{
+            if(error){
+                console.log(error);
+            }else{
+                response.write(data,'binary');
+            }
             response.end();
         });
     },
@@ -185,6 +193,7 @@ module.exports={
         fs.watchFile('./test.txt',(current,prev)=>{
             console.log(current,prev);
         });
+        response.end();
     },
     //串行 串行等待 并行
     async:(request,response)=>{
@@ -239,15 +248,15 @@ module.exports={
     },
 
 
-    mysql:function(request,response){
+    mysql:(request,response)=>{
         service.mysqlRun();
         response.end();
     },
-    mysqlPool:function(request,response){
+    mysqlPool:(request,response)=>{
         service.mysqlPoolRun();
         response.end();
     },
-    event:function(request,response){
+    event:(request,response)=>{
         service.event();
         response.end();
     },
