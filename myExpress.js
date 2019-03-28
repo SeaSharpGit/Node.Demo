@@ -47,6 +47,8 @@ function extResponse(response){
             response.end(JSON.stringify(data));
         }else if(typeof data==='number'){
             response.end(data);
+        }else{
+            response.end('未处理情况');
         }
     };
 }
