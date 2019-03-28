@@ -34,6 +34,7 @@ app2.use((req,res,next)=>{
 });
 app2.use('/test',(req,res,next)=>{
 	console.log('test');
+	res.end();
 });
 
 http.createServer(app2).listen(3000);

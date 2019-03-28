@@ -2,21 +2,23 @@ const url=require('url');
 function myExpress(){
     var tasks=[];
     var app=(request,response)=>{
-        extRequest(request);
-        extResponse(response);
-        var i=0;
-        function next(){
-            var task=tasks[i++];
-            if(!task){
-                return;
-            }
-            if(task.route===null || url.parse(request.url,true).pathname===task.route){
-                task.middleService(request,response,next);
-            }else{
-                next();
-            }
-        };
-        next();
+        if(request.url!='/favicon.ico'){
+            extRequest(request);
+            extResponse(response);
+            var i=0;
+            function next(){
+                var task=tasks[i++];
+                if(!task){
+                    return;
+                }
+                if(task.route===null || url.parse(request.url,true).pathname===task.route){
+                    task.middleService(request,response,next);
+                }else{
+                    next();
+                }
+            };
+            next();
+        }
     };
 
     app.use=(route,middleService)=>{
