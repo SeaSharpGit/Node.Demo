@@ -4,7 +4,7 @@ const fs=require('fs');
 
 function myExpress(){
     var tasks=[];
-    var app=(request,response)=>{
+    var listener=(request,response)=>{
         if(request.url!='/favicon.ico'){
             extRequest(request);
             extResponse(response);
@@ -24,7 +24,7 @@ function myExpress(){
         }
     };
 
-    app.use=(route,middleService)=>{
+    listener.use=(route,middleService)=>{
         if(typeof route==='function'){
             middleService=route;
             route=null;
@@ -36,7 +36,7 @@ function myExpress(){
         });
     }
 
-    app.static=dir=>{
+    listener.static=dir=>{
         return (req,res,next)=>{
             var pathName=url.parse(req.url,true).pathname;
             var filePath=path.join(__dirname,dir,pathName);
@@ -54,7 +54,7 @@ function myExpress(){
         };
     }
 
-    return app;
+    return listener;
 }
 
 function extRequest(request){

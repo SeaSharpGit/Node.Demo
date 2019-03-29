@@ -1,7 +1,9 @@
 const http=require('http');
 const url=require('url');
 const process=require('process');
-
+const bodyParser=require('body-parser');
+const urlencodedParser=bodyParser.urlencoded({extended:false});
+const mime=require('mime-types');
 
 const route=require('./route');
 const myExpress=require('./myExpress');
@@ -24,25 +26,34 @@ process.on('uncaughtException',error=>{
 // 	}
 // };
 
-var app=myExpress();
+var listener=myExpress();
+//body解析
+listener.use(urlencodedParser);
 
-app.use(app.static('public'));
-app.use(app.static('views'));
-
-app.use((req,res,next)=>{
-	console.log('middleService1');
+//mime放入head中
+listener.use((req,res,next)=>{
+	var pathName=url.parse(req.url,true).pathname;
+	var mimeType=mime.lookup(pathName);
+	res.setHeader('content-type',mimeType);
 	next();
 });
-app.use((req,res,next)=>{
-	console.log('middleService2');
+
+//静态文件夹
+listener.use(listener.static('public'));
+listener.use(listener.static('views'));
+
+//中间件1
+listener.use((req,res,next)=>{
+	console.log('middleService');
 	next();
 });
-app.use('/helloworld',(req,res,next)=>{
+
+listener.use('/helloworld',(req,res,next)=>{
 	res.send('helloworld');
 });
 
-app.use((req,res)=>{
+listener.use((req,res)=>{
 	res.send(404,'Not Found');
 });
 
-http.createServer(app).listen(3000);
+http.createServer(listener).listen(3000);

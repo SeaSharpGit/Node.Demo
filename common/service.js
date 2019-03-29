@@ -7,20 +7,20 @@ const pool=mysqlPoolModel.getPool();
 const events=require('events');
 
 module.exports={
-    bodyConvert:(req,res,next)=>{
-        var body='';
-        req.on('data',data=>{
-            body+=data;
-        }).on('end',()=>{
-            var result={};
-            body.split('&').forEach(parameter=>{
-                var keyValue=parameter.split('=');
-                result[keyValue[0]]=keyValue[1];
-            });
-            req.body=result;
-            next();
-        });
-    },
+    // bodyConvert:(req,res,next)=>{
+    //     var body='';
+    //     req.on('data',data=>{
+    //         body+=data;
+    //     }).on('end',()=>{
+    //         var result={};
+    //         body.split('&').forEach(parameter=>{
+    //             var keyValue=parameter.split('=');
+    //             result[keyValue[0]]=keyValue[1];
+    //         });
+    //         req.body=result;
+    //         next();
+    //     });
+    // },
     mysqlOpen:function(){
         connection.connect(function(error){
             if(error){
