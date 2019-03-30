@@ -27,12 +27,12 @@ process.on('uncaughtException',error=>{
 // 	}
 // };
 
-var listener=myExpress();
+var express=myExpress();
 //body解析
-listener.use(urlencodedParser);
+express.use(urlencodedParser);
 
 //mime放入head中
-listener.use((req,res,next)=>{
+express.use((req,res,next)=>{
 	var pathName=url.parse(req.url,true).pathname;
 	var mimeType=mime.lookup(pathName);
 	res.setHeader('content-type',mimeType);
@@ -40,24 +40,24 @@ listener.use((req,res,next)=>{
 });
 
 //静态文件夹
-listener.use(listener.static(path.join(__dirname,'public')));
+express.use(express.static(path.join(__dirname,'public')));
 
 //模版
-listener.set('views',path.join(__dirname,'views'));
+express.set('views',path.join(__dirname,'views'));
 
 //中间件
-listener.use((req,res,next)=>{
+express.use((req,res,next)=>{
 	console.log('middleService');
 	next();
 });
 
 //测试
-listener.use('/helloworld',(req,res,next)=>{
+express.use('/helloworld',(req,res,next)=>{
 	res.send('helloworld');
 });
 
 //模版引擎
-listener.use('/login',(req,res,next)=>{
+express.use('/login',(req,res,next)=>{
 	res.render('login.html',
 	{
 		username:'王海',
@@ -66,8 +66,8 @@ listener.use('/login',(req,res,next)=>{
 });
 
 //404页面
-listener.use((req,res)=>{
+express.use((req,res)=>{
 	res.send(404,'Not Found');
 });
 
-http.createServer(listener).listen(3000);
+http.createServer(express).listen(3000);

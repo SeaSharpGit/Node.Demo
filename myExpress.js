@@ -5,12 +5,12 @@ const ejs=require('ejs');
 
 function myExpress(){
     var tasks=[];
-    var listener=(request,response)=>{
+    var express=(request,response)=>{
         if(request.url!='/favicon.ico'){
             //扩展方法
             extQuery(request);
             extSend(response);
-            extRender(request,response,listener);
+            extRender(request,response,express);
 
             var i=0;
             function next(){
@@ -28,7 +28,7 @@ function myExpress(){
         }
     };
 
-    listener.use=(route,middleService)=>{
+    express.use=(route,middleService)=>{
         if(typeof route==='function'){
             middleService=route;
             route=null;
@@ -40,7 +40,7 @@ function myExpress(){
         });
     }
 
-    listener.static=dir=>{
+    express.static=dir=>{
         return (req,res,next)=>{
             var pathName=url.parse(req.url,true).pathname;
             var filePath=path.join(dir,pathName);
@@ -58,15 +58,15 @@ function myExpress(){
         };
     }
 
-    listener.sets={};
-    listener.set=(key,value)=>{
-        listener.sets[key]=value;
+    express.sets={};
+    express.set=(key,value)=>{
+        express.sets[key]=value;
     };
-    listener.get=key=>{
-        return listener.sets[key];
+    express.get=key=>{
+        return express.sets[key];
     };
 
-    return listener;
+    return express;
 }
 
 function extQuery(request){
