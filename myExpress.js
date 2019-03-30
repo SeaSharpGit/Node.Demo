@@ -1,13 +1,17 @@
 const url=require('url');
 const path=require('path');
 const fs=require('fs');
+const ejs=require('ejs');
 
 function myExpress(){
     var tasks=[];
     var listener=(request,response)=>{
         if(request.url!='/favicon.ico'){
-            extRequest(request);
-            extResponse(response);
+            //扩展方法
+            extQuery(request);
+            extSend(response);
+            extRender(request,response,listener);
+
             var i=0;
             function next(){
                 var task=tasks[i++];
@@ -54,13 +58,21 @@ function myExpress(){
         };
     }
 
+    listener.sets={};
+    listener.set=(key,value)=>{
+        listener.sets[key]=value;
+    };
+    listener.get=key=>{
+        return listener.sets[key];
+    };
+
     return listener;
 }
 
-function extRequest(request){
+function extQuery(request){
     request.query=url.parse(request.url,true).query;
 }
-function extResponse(response){
+function extSend(response){
     response.send=function(data){
         if(typeof data==='string'){
             response.end(data);
@@ -81,6 +93,22 @@ function extResponse(response){
         }else{
             response.end('未处理情况');
         }
+    };
+}
+
+function extRender(request,response,listener){
+    response.render=(dir,parameters)=>{
+        var fullPath=path.join(listener.get('views'),dir);
+        ejs.renderFile(fullPath,parameters,{},(error,data)=>{
+            if(error){
+                response.writeHead(503,error);
+            }else{
+                response.setHeader('content-type','text/html');
+                response.writeHead(200,'OK');
+                response.write(data);
+            }
+            response.end();
+        })
     };
 }
 

@@ -1,5 +1,6 @@
 const http=require('http');
 const url=require('url');
+const path=require('path');
 const process=require('process');
 const bodyParser=require('body-parser');
 const urlencodedParser=bodyParser.urlencoded({extended:false});
@@ -40,7 +41,8 @@ listener.use((req,res,next)=>{
 
 //静态文件夹
 listener.use(listener.static('public'));
-listener.use(listener.static('views'));
+//模版
+listener.set('views',path.join(__dirname,'views'));
 
 //中间件1
 listener.use((req,res,next)=>{
@@ -50,6 +52,14 @@ listener.use((req,res,next)=>{
 
 listener.use('/helloworld',(req,res,next)=>{
 	res.send('helloworld');
+});
+
+listener.use('/login',(req,res,next)=>{
+	res.render('login.html',
+	{
+		username:'王海',
+		password:'123456'
+	});
 });
 
 listener.use((req,res)=>{
