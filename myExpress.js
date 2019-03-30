@@ -43,7 +43,7 @@ function myExpress(){
     listener.static=dir=>{
         return (req,res,next)=>{
             var pathName=url.parse(req.url,true).pathname;
-            var filePath=path.join(__dirname,dir,pathName);
+            var filePath=path.join(dir,pathName);
             fs.readFile(filePath,'binary',(error,data)=>{
                 if(error){
                     console.log(error);

@@ -40,20 +40,23 @@ listener.use((req,res,next)=>{
 });
 
 //静态文件夹
-listener.use(listener.static('public'));
+listener.use(listener.static(path.join(__dirname,'public')));
+
 //模版
 listener.set('views',path.join(__dirname,'views'));
 
-//中间件1
+//中间件
 listener.use((req,res,next)=>{
 	console.log('middleService');
 	next();
 });
 
+//测试
 listener.use('/helloworld',(req,res,next)=>{
 	res.send('helloworld');
 });
 
+//模版引擎
 listener.use('/login',(req,res,next)=>{
 	res.render('login.html',
 	{
@@ -62,6 +65,7 @@ listener.use('/login',(req,res,next)=>{
 	});
 });
 
+//404页面
 listener.use((req,res)=>{
 	res.send(404,'Not Found');
 });
