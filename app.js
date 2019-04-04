@@ -5,13 +5,10 @@ const process=require('process');
 const bodyParser=require('body-parser');
 const urlencodedParser=bodyParser.urlencoded({extended:false});
 const mime=require('mime-types');
+const cluster=require('cluster');
+const cpuCount=require('os').cpus().length;
 
-const route=require('./route');
 const myExpress=require('./myExpress');
-
-process.on('uncaughtException',error=>{
-	console.log('未捕获的异常：'+error.toString());
-});
 
 // var app=(request,response)=>{
 // 	//防止执行2次
@@ -27,47 +24,69 @@ process.on('uncaughtException',error=>{
 // 	}
 // };
 
-var express=myExpress();
-//body解析
-express.use(urlencodedParser);
+if(cluster.isMaster){
+	console.log("master start...");
+	for (let i = 0; i < cpuCount; i++) {
+		cluster.fork();
+	}
+	cluster.on('listening',function(worker,address){
+        console.log('listening: worker ' + worker.process.pid +', Address: '+address.address+":"+address.port);
+    });
 
-//mime放入head中
-express.use((req,res,next)=>{
-	var pathName=url.parse(req.url,true).pathname;
-	var mimeType=mime.lookup(pathName);
-	res.setHeader('content-type',mimeType);
-	next();
-});
+    cluster.on('exit', function(worker, code, signal) {
+        console.log('worker ' + worker.process.pid + ' died');
+    });
+}else{
 
-//静态文件夹
-express.use(express.static(path.join(__dirname,'public')));
-
-//模版
-express.set('views',path.join(__dirname,'views'));
-
-//中间件
-express.use((req,res,next)=>{
-	console.log('middleService');
-	next();
-});
-
-//测试
-express.use('/helloworld',(req,res,next)=>{
-	res.send('helloworld');
-});
-
-//模版引擎
-express.use('/login',(req,res,next)=>{
-	res.render('login.html',
-	{
-		username:'王海',
-		password:'123456'
+	process.on('uncaughtException',error=>{
+		console.log('未捕获的异常：'+error.toString());
 	});
-});
+	
+	var express=myExpress();
+	//body解析
+	express.use(urlencodedParser);
+	
+	//mime放入head中
+	express.use((req,res,next)=>{
+		var pathName=url.parse(req.url,true).pathname;
+		var mimeType=mime.lookup(pathName);
+		res.setHeader('content-type',mimeType);
+		next();
+	});
+	
+	//静态文件夹
+	express.use(express.static(path.join(__dirname,'public')));
+	
+	//模版
+	express.set('views',path.join(__dirname,'views'));
+	
+	//中间件
+	express.use((req,res,next)=>{
+		console.log(process.pid);
+		console.log('middleService');
+		next();
+	});
+	
+	//测试
+	express.use('/helloworld',(req,res,next)=>{
+		res.send('helloworld');
+	});
+	
+	//模版引擎
+	express.use('/login',(req,res,next)=>{
+		res.render('login.html',
+		{
+			username:'王海',
+			password:'123456'
+		});
+	});
+	
+	//404页面
+	express.use((req,res)=>{
+		res.send(404,'Not Found');
+	});
+	
+	http.createServer(express).listen(3000);
+}
 
-//404页面
-express.use((req,res)=>{
-	res.send(404,'Not Found');
-});
 
-http.createServer(express).listen(3000);
