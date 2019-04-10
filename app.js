@@ -9,6 +9,7 @@ const cluster=require('cluster');
 const cpuCount=require('os').cpus().length;
 
 const myExpress=require('./myExpress');
+const route=require('./route');
 
 // var app=(request,response)=>{
 // 	//防止执行2次
@@ -80,11 +81,15 @@ if(cluster.isMaster){
 			password:'123456'
 		});
 	});
-	
-	//404页面
+
 	express.use((req,res)=>{
-		res.send(404,'Not Found');
-	});
+		var pathname=url.parse(req.url).pathname.replace(/\//,'');
+		try{
+			route[pathname](req,res);
+		}catch(error){
+			res.send(404,'Not Found');
+		}
+	})
 	
 	http.createServer(express).listen(3000);
 }
