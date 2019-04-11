@@ -11,21 +11,8 @@ const cpuCount=require('os').cpus().length;
 const myExpress=require('./myExpress');
 const route=require('./route');
 
-// var app=(request,response)=>{
-// 	//防止执行2次
-// 	if(request.url!='/favicon.ico'){
-// 		var pathname=url.parse(request.url).pathname.replace(/\//,'');
-// 		try{
-// 			route[pathname](request,response);
-// 		}catch(error){
-// 			response.writeHead(200, {'Content-Type':'text/html;charset=utf-8'});
-// 			response.write(error.toString());
-// 			response.end();
-// 		}
-// 	}
-// };
-
 if(cluster.isMaster){
+
 	console.log("master start...");
 	for (let i = 0; i < cpuCount; i++) {
 		cluster.fork();
@@ -36,7 +23,8 @@ if(cluster.isMaster){
 
     cluster.on('exit', function(worker, code, signal) {
         console.log('worker ' + worker.process.pid + ' died');
-    });
+	});
+	
 }else{
 
 	process.on('uncaughtException',error=>{
@@ -69,12 +57,12 @@ if(cluster.isMaster){
 	});
 	
 	//测试
-	express.use('/helloworld',(req,res,next)=>{
+	express.use('/helloworld.html',(req,res,next)=>{
 		res.send('helloworld');
 	});
 	
 	//模版引擎
-	express.use('/login',(req,res,next)=>{
+	express.use('/login.html',(req,res,next)=>{
 		res.render('login.html',
 		{
 			username:'王海',
