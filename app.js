@@ -39,6 +39,9 @@ if(cluster.isMaster){
 	express.use((req,res,next)=>{
 		var pathName=url.parse(req.url,true).pathname;
 		var mimeType=mime.lookup(pathName);
+		if(mimeType==false){
+			mimeType='text/html';
+		}
 		res.setHeader('content-type',mimeType);
 		next();
 	});
@@ -57,12 +60,12 @@ if(cluster.isMaster){
 	});
 	
 	//测试
-	express.use('/helloworld.html',(req,res,next)=>{
+	express.use('/helloworld',(req,res,next)=>{
 		res.send('helloworld');
 	});
 	
 	//模版引擎
-	express.use('/login.html',(req,res,next)=>{
+	express.use('/login',(req,res,next)=>{
 		res.render('login.html',
 		{
 			username:'王海',
