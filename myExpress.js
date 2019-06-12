@@ -86,9 +86,8 @@ function extSend(response){
                     response.writeHead(data,arguments[1]);
                     response.end();
                 }catch(ex){
-                    var x=1;
+                    
                 }
-                
             }
         }else{
             response.end('未处理情况');
